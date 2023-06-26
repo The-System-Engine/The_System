@@ -15045,7 +15045,39 @@ namespace Nilsa
 				{
 					if (String.IsNullOrWhiteSpace(resp.FIRST_NAME_CONTACTER)) continue;
 
-					if (localPersId == iPersUserID && localContId == iContUserID)
+                    List<string> localContacters;
+                    if (File.Exists(Path.Combine(sDataPath, "_contacts_" + getSocialNetworkPrefix() + localPersId.ToString() + ".txt")))
+                    {
+                        try
+                        {
+                            var srcFile = File.ReadAllLines(Path.Combine(sDataPath, "_contacts_" + getSocialNetworkPrefix() + localPersId.ToString() + ".txt"));
+                            localContacters = new List<String>(srcFile);
+                            var cont = localContacters[ContactsList_GetUserIdx(localContId.ToString(), localContacters)];
+                            var data = cont.Split('|');
+                            var names = data[1].Split(' ');
+                            names[0] = resp.FIRST_NAME_CONTACTER;
+                            var fullName = "";
+                            if (names.Length > 1) fullName = names[0] + " " + names[1];
+                            else fullName = names[0];
+                            localContacters[ContactsList_GetUserIdx(localContId.ToString(), localContacters)] = localContId.ToString() + "|" + fullName + "|" + data[2];
+                            File.WriteAllLines(Path.Combine(sDataPath, "_contacts_" + getSocialNetworkPrefix() + localPersId.ToString() + ".txt"), localContacters, Encoding.UTF8);
+                        }
+                        catch (Exception e) { }
+                    }
+                    if (localPersId == iPersUserID)
+                    {
+                        var srcFile = File.ReadAllLines(Path.Combine(sDataPath, "_contacts_" + getSocialNetworkPrefix() + localPersId.ToString() + ".txt"));
+                        lstContactsList = new List<String>(srcFile);
+                    }
+					if (localContId == iContUserID)
+					{
+                        contNameName = "";
+                        contNameFamily = "";
+                        SetContactNamesAndPhoto();
+                    }
+
+
+                    /*if (localPersId == iPersUserID && localContId == iContUserID)
 					{
 						contName = $"{resp.FIRST_NAME_CONTACTER} {contNameFamily}";
 						lstContactsList[ContactsList_GetUserIdx(localContId.ToString(), lstContactsList)] = localContId.ToString() + "|" + contName + "|" + photoContURL;
@@ -15080,7 +15112,7 @@ namespace Nilsa
                             var srcFile = File.ReadAllLines(Path.Combine(sDataPath, "_contacts_" + getSocialNetworkPrefix() + localPersId.ToString() + ".txt"));
                             lstContactsList = new List<String>(srcFile);
                         }
-					}
+					}*/
 
 					/*var mode = -1;
 					if (resp.FIRST_NAME_CONTACTER != null) mode = 0;
@@ -15115,7 +15147,37 @@ namespace Nilsa
 				{
 					if (String.IsNullOrWhiteSpace(resp.LAST_NAME_CONTACTER)) continue;
 
-					if (localPersId == iPersUserID && localContId == iContUserID)
+
+                    List<string> localContacters;
+                    if (File.Exists(Path.Combine(sDataPath, "_contacts_" + getSocialNetworkPrefix() + localPersId.ToString() + ".txt")))
+                    {
+                        try
+                        {
+                            var srcFile = File.ReadAllLines(Path.Combine(sDataPath, "_contacts_" + getSocialNetworkPrefix() + localPersId.ToString() + ".txt"));
+                            localContacters = new List<String>(srcFile);
+                            var cont = localContacters[ContactsList_GetUserIdx(localContId.ToString(), localContacters)];
+                            var data = cont.Split('|');
+                            var names = data[1].Split(' ');
+                            var fullName = names[0] + " " + resp.LAST_NAME_CONTACTER;
+                            localContacters[ContactsList_GetUserIdx(localContId.ToString(), localContacters)] = localContId.ToString() + "|" + fullName + "|" + data[2];
+                            File.WriteAllLines(Path.Combine(sDataPath, "_contacts_" + getSocialNetworkPrefix() + localPersId.ToString() + ".txt"), localContacters, Encoding.UTF8);
+                        }
+                        catch (Exception e) { }
+                    }
+                    if (localPersId == iPersUserID)
+                    {
+                        var srcFile = File.ReadAllLines(Path.Combine(sDataPath, "_contacts_" + getSocialNetworkPrefix() + localPersId.ToString() + ".txt"));
+                        lstContactsList = new List<String>(srcFile);
+                    }
+
+                    if (localContId == iContUserID)
+                    {
+                        contNameName = "";
+                        contNameFamily = "";
+                        SetContactNamesAndPhoto();
+                    }
+
+                    /*if (localPersId == iPersUserID && localContId == iContUserID)
 					{
 						contName = $"{contNameName} {resp.LAST_NAME_CONTACTER}";
 						lstContactsList[ContactsList_GetUserIdx(localContId.ToString(), lstContactsList)] = localContId.ToString() + "|" + contName + "|" + photoContURL;
@@ -15147,8 +15209,8 @@ namespace Nilsa
                             var srcFile = File.ReadAllLines(Path.Combine(sDataPath, "_contacts_" + getSocialNetworkPrefix() + localPersId.ToString() + ".txt"));
                             lstContactsList = new List<String>(srcFile);
                         }
-                    }
-				}
+                    }*/
+                }
 				else if (resp.STATUS == 200 && resp.COMMAND.Contains("TEACHING_VIA_GPT"))
 				{
 					if (String.IsNullOrWhiteSpace(resp.ORIGINAL_MESSAGE)) continue;
@@ -17932,9 +17994,10 @@ namespace Nilsa
 			contName = contNameName + " " + contNameFamily;
 			labelCont1FIO.Text = contName;
 			toolTipMessage.SetToolTip(labelCont1FIO, labelCont1FIO.Text);
-			
-			if (labelCont1FIO.Text == "" || labelCont1FIO.Text ==  " ")
-			{
+
+			if (String.IsNullOrWhiteSpace(contNameName) || String.IsNullOrWhiteSpace(contNameFamily))
+
+            {
 				if (File.Exists(Path.Combine(sDataPath, "_contacts_" + getSocialNetworkPrefix() + Convert.ToString(iPersUserID) + ".txt")))
 				{
 					try
@@ -21694,6 +21757,10 @@ namespace Nilsa
 				SelectNextReceivedMessage(false);
 				//StartService();
 				//onChangePersoneByTimer(true, true);
+			}
+			if (!timerAnswerWaiting.Enabled && !timerWriteMessages.Enabled && !timerReadMessages.Enabled && lstReceivedMessages.Count > 0 && String.IsNullOrWhiteSpace(labelInMsgHarTitleValue_Text))
+			{
+				SelectNextReceivedMessage(false);
 			}
 		}
 

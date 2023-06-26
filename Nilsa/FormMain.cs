@@ -14953,7 +14953,32 @@ namespace Nilsa
 							}
 							break;
 						case "CONTACTER GET PHOTO SUCCESS":
-							if (iPersUserID == localPersId)
+
+                            photoContURL = localUrl;
+                            List<string> localContacters;
+                            if (File.Exists(Path.Combine(sDataPath, "_contacts_" + getSocialNetworkPrefix() + localPersId.ToString() + ".txt")))
+                            {
+                                try
+                                {
+                                    var srcFile = File.ReadAllLines(Path.Combine(sDataPath, "_contacts_" + getSocialNetworkPrefix() + localPersId.ToString() + ".txt"));
+                                    localContacters = new List<String>(srcFile);
+                                    var cont = localContacters[ContactsList_GetUserIdx(localContId.ToString(), localContacters)];
+                                    var data = cont.Split('|');
+                                    localContacters[ContactsList_GetUserIdx(localContId.ToString(), localContacters)] = localContId.ToString() + "|" + data[1] + "|" + localUrl;
+                                    File.WriteAllLines(Path.Combine(sDataPath, "_contacts_" + getSocialNetworkPrefix() + localPersId.ToString() + ".txt"), localContacters, Encoding.UTF8);
+                                }
+                                catch (Exception e) { }
+                            }
+                            if (localPersId == iPersUserID)
+                            {
+                                var srcFile = File.ReadAllLines(Path.Combine(sDataPath, "_contacts_" + getSocialNetworkPrefix() + localPersId.ToString() + ".txt"));
+                                lstContactsList = new List<String>(srcFile);
+                            }
+                            if (localContId == iContUserID)
+                            {
+                                SetPhoto(false, photoContURL);
+                            }
+                            /*if (iPersUserID == localPersId)
 							{
 								photoContURL = localUrl;
 								SetPhoto(false, photoContURL);
@@ -14983,8 +15008,8 @@ namespace Nilsa
 									}
 									catch (Exception e) { }
 								}
-							}
-							break;
+							}*/
+                            break;
 					}
 				}
 				else if (resp.STATUS == 200 && resp.FIRST_NAME_PERSONE != null) //получение имени или фамилии персонажа
@@ -23168,12 +23193,23 @@ namespace Nilsa
 		{
 			if (lstReceivedMessages.Count == 0)
 			{
-				lstReceivedMessages.Add($"0|{theSystemContacter.ContID}|" + DateTime.Now.ToShortDateString() + "|" + DateTime.Now.ToShortTimeString() + "|" + "TIMER_01_FINISHED_READ_NEW_MESSAGE");
-                addToHistory(iPersUserID, theSystemContacter.ContID, true, DateTime.Now.Date.ToString(), DateTime.Now.TimeOfDay.ToString(), "TIMER_01_FINISHED_READ_NEW_MESSAGE");
-                Invoke((MethodInvoker)delegate
+				var needAdd = true;
+				for (int i = 0; i < lstReceivedMessages.Count; i++)
+                {
+                    if (lstReceivedMessages[i].Contains($"0|{theSystemContacter.ContID}|") && (lstReceivedMessages[i].Contains("TIMER_01_FINISHED_READ_NEW_MESSAGE")))
+                    {
+						needAdd = false;
+                    }
+                }
+				if (needAdd)
 				{
-					SelectNextReceivedMessage(false);
-				});
+                    lstReceivedMessages.Add($"0|{theSystemContacter.ContID}|" + DateTime.Now.ToShortDateString() + "|" + DateTime.Now.ToShortTimeString() + "|" + "TIMER_01_FINISHED_READ_NEW_MESSAGE");
+                    addToHistory(iPersUserID, theSystemContacter.ContID, true, DateTime.Now.Date.ToString(), DateTime.Now.TimeOfDay.ToString(), "TIMER_01_FINISHED_READ_NEW_MESSAGE");
+                    Invoke((MethodInvoker)delegate
+                    {
+                        SelectNextReceivedMessage(false);
+                    });
+                }
 				//SelectNextReceivedMessage(false);
 			}
 		}

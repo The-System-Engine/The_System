@@ -10334,7 +10334,8 @@ namespace Nilsa
 		private String[] getLastMessageVector()
 		{
 			String[] sQV = new String[iMsgHarCount];
-			for (int i = 0; i < iMsgHarCount; i++)
+            if (adbrCurrent == null) return sQV;
+            for (int i = 0; i < iMsgHarCount; i++)
 				sQV[i] = "";
 			if (sCurrentContactLastMessageFieldArray != null && sCurrentContactLastMessageFieldArray.Length > 0)
 			{

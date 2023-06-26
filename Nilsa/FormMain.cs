@@ -10305,6 +10305,7 @@ namespace Nilsa
 		{
 			value = value.Replace("#CHATGPT MESSAGE#", chatgptMessage);
             value = value.Replace("#ORIGINAL MESSAGE#", originalMessage);
+			value = value.Replace("#CONTACTER_MESSAGE#", labelInMsgHarTitleValue_Text);
             return value;
 		}
 
@@ -14855,7 +14856,7 @@ namespace Nilsa
 					resp.TEXT = resp.TEXT.Replace("\n", " ");
 
 					addToHistory(localPersId, localContId, false, DateTime.Now.Date.ToString(), DateTime.Now.TimeOfDay.ToString(), resp.TEXT.Replace("\n", " "));
-					if (iPersUserID == localPersId) getMessageHistory(localPersId, localContId);
+					if (iPersUserID == localPersId && iContUserID == localContId) getMessageHistory(localPersId, localContId);
 
 					if (resp.MESSAGES != null)
 					{

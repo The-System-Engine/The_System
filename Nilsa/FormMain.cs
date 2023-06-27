@@ -10348,7 +10348,7 @@ namespace Nilsa
 
 					if (i == 0 /*&& s.Length == 0*/)
 					{
-						if (!adbrCurrent.bMsgReplaceValue[i] || s.Length == 0)
+						if ((!adbrCurrent.bMsgReplaceValue[i] || s.Length == 0) && adbrCurrent.bMsgReplaceValue.Length > 0)
 							s = adbrCurrent.DefaultAlgorithmTheme;
 					}
 					//if (iCompareVectorsKoef[iv] == 1111)
@@ -23195,12 +23195,9 @@ namespace Nilsa
 			if (lstReceivedMessages.Count == 0)
 			{
 				var needAdd = true;
-				for (int i = 0; i < lstReceivedMessages.Count; i++)
+				for (int i = 0; i < lstOutgoingMessages.Count; i++)
                 {
-                    if (lstReceivedMessages[i].Contains($"0|{theSystemContacter.ContID}|") && (lstReceivedMessages[i].Contains("TIMER_01_FINISHED_READ_NEW_MESSAGE")))
-                    {
-						needAdd = false;
-                    }
+					if (lstOutgoingMessages[i].Contains("_SELENIUM_NEW_MESSAGES") && lstOutgoingMessages[i].Contains("*#|0|0|The System|")) needAdd = false;
                 }
 				if (needAdd)
 				{

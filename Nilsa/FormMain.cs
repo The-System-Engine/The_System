@@ -17237,7 +17237,8 @@ namespace Nilsa
 				progressBarRead.Invalidate();
 				timerReadMessages.Enabled = true;
 			}));
-		}
+			if (!doDelayedMessages()) StartService();
+        }
 
 		/*private void timerReadMessagesOn()
 		{
@@ -17367,6 +17368,7 @@ namespace Nilsa
 					//    }
 					//}
 					//timerWriteMessagesOn();
+
 					return false;
 				}
 			}

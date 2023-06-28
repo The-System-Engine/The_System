@@ -310,8 +310,8 @@ namespace Nilsa
             ContactsList_Load();
             ContactersLoad();
 
-            button26.Enabled = FormMain.SocialNetwork == 0;
-            buttonImportContacterServer.Enabled = FormMain.SocialNetwork == 0;
+            button26.Enabled = true;
+            buttonImportContacterServer.Enabled = true;
             button2.Enabled = false;
             button5.Enabled = false;
             button3.Enabled = false;
@@ -1011,6 +1011,19 @@ namespace Nilsa
         {
             int iuserIdx = ContactsList_GetUserIdx(sUD);
             String userRec = sUD + "|" + sUName + "|" + photourl;// + "|" + cid;
+            if (iuserIdx >= 0)
+                lstContactsList[iuserIdx] = userRec;
+            else
+                lstContactsList.Add(userRec);
+
+            File.WriteAllLines(Path.Combine(FormMain.sDataPath, "_contacts_" + FormMain.getSocialNetworkPrefix() + iPersUserID.ToString() + ".txt"), lstContactsList, Encoding.UTF8);
+            ContactersLoad();
+        }
+
+        public void ContactsList_AddUser(String sUD, String sUName)
+        {
+            int iuserIdx = ContactsList_GetUserIdx(sUD);
+            String userRec = sUD + "|" + sUName + "|";
             if (iuserIdx >= 0)
                 lstContactsList[iuserIdx] = userRec;
             else
@@ -2448,8 +2461,8 @@ namespace Nilsa
             this.button9.Enabled = true;
             this.button11.Enabled = FormMain.SocialNetwork == 0;
             this.button15.Enabled = true;
-            this.button26.Enabled = FormMain.SocialNetwork == 0;
-            buttonImportContacterServer.Enabled = FormMain.SocialNetwork == 0;
+            this.button26.Enabled = true;
+            buttonImportContacterServer.Enabled = true;
             this.button16.Enabled = gridSelectedIndex > 0 || gridCheckedCount > 0;
             buttonSelectContacters.Enabled = gridSelectedIndex > 0 || gridCheckedCount > 0;
             this.button19.Enabled = FormMain.SocialNetwork == 0;
@@ -4366,12 +4379,11 @@ namespace Nilsa
                                 }
 
                                 File.WriteAllLines(Path.Combine(FormMain.sDataPath, sAttrFileName), lstContHarValuesTemp, Encoding.UTF8);
-                                Contacter foundContacter = listContacters.Find(listContacters => listContacters.ID == Convert.ToInt32(sUID));
-                                ContactsList_AddUser(foundContacter);
+                                //Contacter foundContacter = listContacters.Find(listContacters => listContacters.ID == Convert.ToInt32(sUID));
+                                ContactsList_AddUser(sUID, sUName);
                                 ContactsList_AddUserToVisualList(sUID, sUName, ContactsList_GetVisualListIdx(sUID));
 
                             }
-
                         }
                     }
                 }//if (File.Exists(openFileDialog.FileName))

@@ -2954,13 +2954,20 @@ namespace Nilsa
                             {
                                 var srcFile = File.ReadAllLines(Path.Combine(FormMain.sDataPath, "pers_" + FormMain.getSocialNetworkPrefix(iSocialNetwork) + sUID + ".txt"));
                                 lstContHarCurrent = new List<String>(srcFile);
-                                lstContHarCurrent[iAlgValHar] = lstContHarCurrent[iAlgValHar].Substring(0, lstContHarCurrent[iAlgValHar].IndexOf("|") + 1) + SelectedAlgorithm.Name;
-
-                                File.WriteAllLines(Path.Combine(FormMain.sDataPath, "pers_" + FormMain.getSocialNetworkPrefix(iSocialNetwork) + sUID + ".txt"), lstContHarCurrent, Encoding.UTF8);
-
-                                PersonenList_AddUserToVisualList(PersonenList_AddUser(iSocialNetwork, sUID, sUName, sULogin, sUPwd), iSelIdx);
-
                             }
+                            else
+                            {
+                                lstContHarCurrent = new List<string>();
+                                for (int i = 1; i <= iContHarCount; i++)
+                                {
+                                    lstContHarCurrent.Add($"{i}|");
+                                }
+                            }
+                            lstContHarCurrent[iAlgValHar] = lstContHarCurrent[iAlgValHar].Substring(0, lstContHarCurrent[iAlgValHar].IndexOf("|") + 1) + SelectedAlgorithm.Name;
+
+                            File.WriteAllLines(Path.Combine(FormMain.sDataPath, "pers_" + FormMain.getSocialNetworkPrefix(iSocialNetwork) + sUID + ".txt"), lstContHarCurrent, Encoding.UTF8);
+
+                            PersonenList_AddUserToVisualList(PersonenList_AddUser(iSocialNetwork, sUID, sUName, sULogin, sUPwd), iSelIdx);
                             File.WriteAllLines(Path.Combine(FormMain.sDataPath, "_algotithm_settings_" + FormMain.getSocialNetworkPrefix(iSocialNetwork) + sUID + ".txt"), lstAlgorithmsDBRecordTS, Encoding.UTF8);
                         }
                     }

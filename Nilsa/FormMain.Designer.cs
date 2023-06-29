@@ -755,7 +755,7 @@
             this.tableLayoutPanelTop.ColumnCount = 3;
             this.tableLayoutPanelTop.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 380F));
             this.tableLayoutPanelTop.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelTop.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 524F));
+            this.tableLayoutPanelTop.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 525F));
             this.tableLayoutPanelTop.Controls.Add(this.panelPerson, 2, 0);
             this.tableLayoutPanelTop.Controls.Add(this.panelCenter, 1, 0);
             this.tableLayoutPanelTop.Controls.Add(this.panelContacter, 0, 0);
@@ -778,10 +778,10 @@
             this.panelPerson.Controls.Add(this.toolStrip2);
             this.panelPerson.Controls.Add(this.tableLayoutRightBottom);
             this.panelPerson.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelPerson.Location = new System.Drawing.Point(837, 1);
+            this.panelPerson.Location = new System.Drawing.Point(836, 1);
             this.panelPerson.Margin = new System.Windows.Forms.Padding(0);
             this.panelPerson.Name = "panelPerson";
-            this.panelPerson.Size = new System.Drawing.Size(524, 748);
+            this.panelPerson.Size = new System.Drawing.Size(525, 748);
             this.panelPerson.TabIndex = 5;
             // 
             // labelPers1Name
@@ -819,7 +819,7 @@
             this.listBoxOutMsg.Location = new System.Drawing.Point(0, 322);
             this.listBoxOutMsg.Margin = new System.Windows.Forms.Padding(0);
             this.listBoxOutMsg.Name = "listBoxOutMsg";
-            this.listBoxOutMsg.Size = new System.Drawing.Size(524, 159);
+            this.listBoxOutMsg.Size = new System.Drawing.Size(525, 159);
             this.listBoxOutMsg.TabIndex = 1;
             this.listBoxOutMsg.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listBoxOutMsg_DrawItem);
             this.listBoxOutMsg.SelectedIndexChanged += new System.EventHandler(this.listBoxOutMsg_SelectedIndexChanged);
@@ -858,7 +858,7 @@
             this.tableLayoutPanelPerson.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanelPerson.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanelPerson.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanelPerson.Size = new System.Drawing.Size(524, 301);
+            this.tableLayoutPanelPerson.Size = new System.Drawing.Size(525, 301);
             this.tableLayoutPanelPerson.TabIndex = 2;
             // 
             // panel2
@@ -944,7 +944,7 @@
             this.toolStrip2.Location = new System.Drawing.Point(0, 481);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Padding = new System.Windows.Forms.Padding(2, 0, 0, 0);
-            this.toolStrip2.Size = new System.Drawing.Size(524, 50);
+            this.toolStrip2.Size = new System.Drawing.Size(525, 50);
             this.toolStrip2.TabIndex = 0;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -1087,7 +1087,7 @@
             this.panelCenter.Location = new System.Drawing.Point(382, 1);
             this.panelCenter.Margin = new System.Windows.Forms.Padding(0);
             this.panelCenter.Name = "panelCenter";
-            this.panelCenter.Size = new System.Drawing.Size(454, 748);
+            this.panelCenter.Size = new System.Drawing.Size(453, 748);
             this.panelCenter.TabIndex = 4;
             // 
             // tableLayoutMiddleBottom
@@ -1096,7 +1096,7 @@
             this.tableLayoutMiddleBottom.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutMiddleBottom.Location = new System.Drawing.Point(0, 605);
             this.tableLayoutMiddleBottom.Name = "tableLayoutMiddleBottom";
-            this.tableLayoutMiddleBottom.Size = new System.Drawing.Size(454, 143);
+            this.tableLayoutMiddleBottom.Size = new System.Drawing.Size(453, 143);
             this.tableLayoutMiddleBottom.TabIndex = 4;
             // 
             // listBoxUserMessages
@@ -1107,7 +1107,7 @@
             this.listBoxUserMessages.FormattingEnabled = true;
             this.listBoxUserMessages.Location = new System.Drawing.Point(0, 0);
             this.listBoxUserMessages.Name = "listBoxUserMessages";
-            this.listBoxUserMessages.Size = new System.Drawing.Size(454, 143);
+            this.listBoxUserMessages.Size = new System.Drawing.Size(453, 143);
             this.listBoxUserMessages.TabIndex = 3;
             this.listBoxUserMessages.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listBoxUserMessages_DrawItem);
             this.listBoxUserMessages.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.listBoxUserMessages_MeasureItem);
@@ -1121,7 +1121,7 @@
             this.panelMsgHarMarkerAlgorithm.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelMsgHarMarkerAlgorithm.Location = new System.Drawing.Point(0, 301);
             this.panelMsgHarMarkerAlgorithm.Name = "panelMsgHarMarkerAlgorithm";
-            this.panelMsgHarMarkerAlgorithm.Size = new System.Drawing.Size(454, 304);
+            this.panelMsgHarMarkerAlgorithm.Size = new System.Drawing.Size(453, 304);
             this.panelMsgHarMarkerAlgorithm.TabIndex = 2;
             // 
             // tableLayoutPanelMsgHar
@@ -1133,7 +1133,7 @@
             this.tableLayoutPanelMsgHar.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
             this.tableLayoutPanelMsgHar.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
             this.tableLayoutPanelMsgHar.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-            this.tableLayoutPanelMsgHar.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 381F));
+            this.tableLayoutPanelMsgHar.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 382F));
             this.tableLayoutPanelMsgHar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelMsgHar.Location = new System.Drawing.Point(106, 0);
             this.tableLayoutPanelMsgHar.Name = "tableLayoutPanelMsgHar";
@@ -1154,7 +1154,7 @@
             this.tableLayoutPanelMsgHar.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 18F));
             this.tableLayoutPanelMsgHar.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 18F));
             this.tableLayoutPanelMsgHar.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 18F));
-            this.tableLayoutPanelMsgHar.Size = new System.Drawing.Size(348, 304);
+            this.tableLayoutPanelMsgHar.Size = new System.Drawing.Size(347, 304);
             this.tableLayoutPanelMsgHar.TabIndex = 3;
             // 
             // toolStrip1
@@ -1346,7 +1346,7 @@
             this.tableLayoutPanelTopMessages.RowCount = 2;
             this.tableLayoutPanelTopMessages.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanelTopMessages.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-            this.tableLayoutPanelTopMessages.Size = new System.Drawing.Size(454, 301);
+            this.tableLayoutPanelTopMessages.Size = new System.Drawing.Size(453, 301);
             this.tableLayoutPanelTopMessages.TabIndex = 1;
             // 
             // toolStrip4
@@ -1366,7 +1366,7 @@
             this.toolStrip4.Location = new System.Drawing.Point(227, 250);
             this.toolStrip4.Name = "toolStrip4";
             this.toolStrip4.Padding = new System.Windows.Forms.Padding(0);
-            this.toolStrip4.Size = new System.Drawing.Size(226, 50);
+            this.toolStrip4.Size = new System.Drawing.Size(225, 50);
             this.toolStrip4.TabIndex = 24;
             this.toolStrip4.Text = "toolStrip4";
             // 
@@ -1457,7 +1457,7 @@
             this.webBrowserOutEqMessageText.Location = new System.Drawing.Point(230, 4);
             this.webBrowserOutEqMessageText.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowserOutEqMessageText.Name = "webBrowserOutEqMessageText";
-            this.webBrowserOutEqMessageText.Size = new System.Drawing.Size(220, 242);
+            this.webBrowserOutEqMessageText.Size = new System.Drawing.Size(219, 242);
             this.webBrowserOutEqMessageText.TabIndex = 22;
             this.webBrowserOutEqMessageText.Url = new System.Uri("about:blank", System.UriKind.Absolute);
             // 

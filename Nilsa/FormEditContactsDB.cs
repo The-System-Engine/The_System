@@ -22,7 +22,7 @@ namespace Nilsa
         FormMain mFormMain;
 
         public String[,] sContHar;
-        public int iContHarCount = 16;
+        public int iContHarCount;// = 16;
         public int iContHarAttrCount = 4;
         List<String> lstErrorsLogList;
         String slstErrorsInit;
@@ -2761,6 +2761,7 @@ namespace Nilsa
             {
                 var srcFile = File.ReadAllLines(Path.Combine(Application.StartupPath, "FormEditPersHarValues_" + Convert.ToString(submode) + "_" + Convert.ToString(importmode) + ".values"));
                 lstContHar = new List<String>(srcFile);
+                while (lstContHar.Count < iContHarCount) lstContHar.Add(String.Empty);
             }
 
             if (lstContHar.Count > 0)

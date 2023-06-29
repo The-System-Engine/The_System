@@ -20,6 +20,8 @@ namespace Nilsa
         AdvancedComboBox[] cbMarkerAlgorithms;
         AdvancedComboBox[] cbMarkerContacterHar;
         AdvancedComboBox[] cbMarkerContacterHarValue;
+        AdvancedComboBox[] cbMarkerContacterHar2;
+        AdvancedComboBox[] cbMarkerContacterHarValue2;
         AdvancedComboBox[] cbMarkerMsgHar;
         AdvancedComboBox[] cbMarkerMsgHarValue;
         TextBox[] tbMarkerInMessages;
@@ -35,6 +37,8 @@ namespace Nilsa
             cbMarkerAlgorithms = new AdvancedComboBox[FormMain.MaxMarkerCount];
             cbMarkerContacterHar = new AdvancedComboBox[FormMain.MaxMarkerCount];
             cbMarkerContacterHarValue = new AdvancedComboBox[FormMain.MaxMarkerCount];
+            cbMarkerContacterHar2 = new AdvancedComboBox[FormMain.MaxMarkerCount];
+            cbMarkerContacterHarValue2 = new AdvancedComboBox[FormMain.MaxMarkerCount];
             cbMarkerMsgHar = new AdvancedComboBox[FormMain.MaxMarkerCount];
             cbMarkerMsgHarValue = new AdvancedComboBox[FormMain.MaxMarkerCount];
             tbMarkerInMessages = new TextBox[FormMain.MaxMarkerCount];
@@ -131,11 +135,46 @@ namespace Nilsa
                     cbMarkerContacterHarValue[i * 4 + j].Margin = new System.Windows.Forms.Padding(0);
                     cbMarkerContacterHarValue[i * 4 + j].Name = "cb_markercontacterharvalue_" + (i * 4 + j + 1).ToString();
                     cbMarkerContacterHarValue[i * 4 + j].Size = new System.Drawing.Size(60, 21);
-                    cbMarkerContacterHarValue[i * 4 + j].TabIndex = 0;
+                    cbMarkerContacterHarValue[i * 4 + j].TabIndex = 2;
                     cbMarkerContacterHarValue[i * 4 + j].Tag = (Int32)(i * 4 + j);
                     cbMarkerContacterHarValue[i * 4 + j].SelectedIndexChanged += cbMarkerContacterHarValue_SelectedIndexChanged;
                     cbMarkerContacterHarValue[i * 4 + j].MouseDown += cbMarkerContacterHarValue_OnMouseDown;
                     tableLayoutPanel2.Controls.Add(cbMarkerContacterHarValue[i * 4 + j], j * 2 + 1, i * 8 + 4);
+
+                    /*
+                    // Добавление второго ComboBox
+                    cbMarkerContacterHar2[i * 4 + j] = new AdvancedComboBox();
+                    cbMarkerContacterHar2[i * 4 + j].Dock = System.Windows.Forms.DockStyle.Fill;
+                    cbMarkerContacterHar2[i * 4 + j].DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+                    cbMarkerContacterHar2[i * 4 + j].FormattingEnabled = true;
+                    cbMarkerContacterHar2[i * 4 + j].Location = new System.Drawing.Point(1121, 22);
+                    cbMarkerContacterHar2[i * 4 + j].Margin = new System.Windows.Forms.Padding(0);
+                    cbMarkerContacterHar2[i * 4 + j].Name = "cb_markercontacterhar2_" + (i * 4 + j + 1).ToString();
+                    cbMarkerContacterHar2[i * 4 + j].Size = new System.Drawing.Size(60, 21);
+                    cbMarkerContacterHar2[i * 4 + j].TabIndex = 0;
+                    cbMarkerContacterHar2[i * 4 + j].Tag = (Int32)(i * 4 + j);
+                    cbMarkerContacterHar2[i * 4 + j].Items.Add("");
+                    for (int ihar = 0; ihar < mFormMain.iContHarCount; ihar++)
+                        cbMarkerContacterHar2[i * 4 + j].Items.Add(mFormMain.sContHar[ihar, 1]);
+                    cbMarkerContacterHar2[i * 4 + j].SelectedIndexChanged += cbMarkerContacterHar_SelectedIndexChanged;
+                    tableLayoutPanel2.Controls.Add(cbMarkerContacterHar2[i * 4 + j], j * 2 + 1, i * 8 + 4);
+
+                    // Добавление TextBox
+                    cbMarkerContacterHarValue2[i * 4 + j] = new AdvancedComboBox();
+                    cbMarkerContacterHarValue2[i * 4 + j].Dock = System.Windows.Forms.DockStyle.Fill;
+                    cbMarkerContacterHarValue2[i * 4 + j].DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+                    cbMarkerContacterHarValue2[i * 4 + j].FormattingEnabled = true;
+                    cbMarkerContacterHarValue2[i * 4 + j].Location = new System.Drawing.Point(1121, 22);
+                    cbMarkerContacterHarValue2[i * 4 + j].Margin = new System.Windows.Forms.Padding(0);
+                    cbMarkerContacterHarValue2[i * 4 + j].Name = "cb_markercontacterharvalue_" + (i * 4 + j + 1).ToString();
+                    cbMarkerContacterHarValue2[i * 4 + j].Size = new System.Drawing.Size(60, 21);
+                    cbMarkerContacterHarValue2[i * 4 + j].TabIndex = 2;
+                    cbMarkerContacterHarValue2[i * 4 + j].Tag = (Int32)(i * 4 + j);
+                    cbMarkerContacterHarValue2[i * 4 + j].SelectedIndexChanged += cbMarkerContacterHarValue_SelectedIndexChanged;
+                    cbMarkerContacterHarValue2[i * 4 + j].MouseDown += cbMarkerContacterHarValue_OnMouseDown;
+                    tableLayoutPanel2.Controls.Add(cbMarkerContacterHarValue2[i * 4 + j], j * 2 + 1, i * 8 + 5);
+                    */
+
 
                     lbl = new Label();
                     lbl.AutoSize = true;

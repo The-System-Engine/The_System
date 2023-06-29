@@ -588,7 +588,7 @@ namespace Nilsa
 			tableLayoutPanelPerson.SuspendLayout();
 			//tableLayoutPanelPerson.ColumnCount = 18;
 			//lblPersHarNames = new Label[iContHarCount];
-			lblPersHarValues = new PersoneLabel[iContHarCount];
+			lblPersHarValues = new PersoneLabel[iPersHarCount];
 			for (int i = 0; i < iPersHarCount; i++)
 			{
 				lblPersHarValues[i] = new PersoneLabel();
@@ -7491,6 +7491,14 @@ namespace Nilsa
 						var srcFile = File.ReadAllLines(Path.Combine(sDataPath, "_conthar.txt"));
 						lstContHar = new List<String>(srcFile);
 						int iSFSC = lstContHar.Count;
+						if (lstContHar.Count != iContHarCount)
+						{
+							for (int i = lstContHar.Count + 1; i <= iContHarCount; i++)
+							{
+								var newChar = $"{i}|New Char|Строка||";//16|Алгоритм|Строка||
+								lstContHar.Add(newChar);
+							}
+						}
 						if (lstContHar.Count == iContHarCount)
 						{
 							for (int i = 0; i < iContHarCount; i++)
@@ -9278,8 +9286,35 @@ namespace Nilsa
 
             string filePath = Path.Combine(sDataPath, "chat_" + getSocialNetworkPrefix() + _iPersUserID.ToString() + "_" + Convert.ToString(_iContUserID) + ".txt");
             string entry = (inboundMessage ? "0" : "1") + "|" + _date + "|" + _time + "|" + _text + Environment.NewLine;
-            File.AppendAllText(filePath, entry);
-        }
+
+
+            const int maxAttempts = 5;
+            var attempts = 0;
+            bool success = false;
+
+            while (!success && attempts < maxAttempts)
+            {
+                try
+                {
+                    File.AppendAllText(filePath, entry);
+                    success = true;
+                }
+                catch (IOException)
+                {
+                    // Файл заблокирован, ждем некоторое время и пытаемся снова
+                    Thread.Sleep(500);
+                    attempts++;
+                }
+            }
+
+            if (!success)
+            {
+                // Обработка случая, когда не удалось записать данные в файл после нескольких попыток
+                // Можно вывести сообщение об ошибке или выполнить другие действия
+                listBoxUserMessages.Items.Add(entry);
+            }
+        
+		}
 
         /// <summary>
         /// Добавляет сообщение в историю переписки, если inboundMessage = true - сообщение контактера, иначе персонажа
@@ -9301,7 +9336,33 @@ namespace Nilsa
             {
                 string filePath = Path.Combine(sDataPath, "chat_" + getSocialNetworkPrefix() + _iPersUserID.ToString() + "_" + Convert.ToString(_iContUserID) + ".txt");
                 string entry = (inboundMessage ? "0" : "1") + "|" + _date + "|" + _time + "|" + _text + Environment.NewLine;
-                File.AppendAllText(filePath, entry);
+
+
+                const int maxAttempts = 5;
+                int attempts = 0;
+                bool success = false;
+
+                while (!success && attempts < maxAttempts)
+                {
+                    try
+                    {
+                        File.AppendAllText(filePath, entry);
+                        success = true;
+                    }
+                    catch (IOException)
+                    {
+                        // Файл заблокирован, ждем некоторое время и пытаемся снова
+                        Thread.Sleep(500);
+                        attempts++;
+                    }
+                }
+
+                if (!success)
+                {
+                    // Обработка случая, когда не удалось записать данные в файл после нескольких попыток
+                    // Можно вывести сообщение об ошибке или выполнить другие действия
+                    listBoxUserMessages.Items.Add(entry);
+                }
             });
         }
 
@@ -9539,7 +9600,51 @@ namespace Nilsa
 			}
 		}
 
-		private void ReadAllUserMessages(long localUserID, long localContID)
+        private async Task GetMessageHistoryAsync(long localUserID, long localContID)
+        {
+            listBoxUserMessages.BeginUpdate(); // Отключаем обновление listBoxUserMessages во время добавления элементов
+            listBoxUserMessages.Items.Clear();
+
+            string filePath = Path.Combine(sDataPath, $"chat_{getSocialNetworkPrefix()}{localUserID}_{localContID}.txt");
+
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    using (StreamReader reader = new StreamReader(filePath))
+                    {
+                        string line;
+                        while ((line = await reader.ReadLineAsync()) != null)
+                        {
+                            string[] parts = line.Split('|');
+                            if (parts.Length >= 4)
+                            {
+                                string inboundStr = parts[0];
+                                string dateStr = parts[1].Substring(0, 10);
+                                string timeStr = parts[2].Substring(0, 8);
+                                string bodyStr = NilsaUtils.TextToString(parts[3]);
+
+                                bool inboundMessage = inboundStr.Equals("0");
+                                string formattedLine = $"{(inboundMessage ? "<- " : "-> ")}{dateStr} {timeStr} - {bodyStr}";
+
+                                listBoxUserMessages.Items.Add(formattedLine);
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    ExceptionToLogList("File.ReadAllLines", "Reading lists", e);
+                }
+            }
+
+            listBoxUserMessages.EndUpdate(); // Включаем обновление listBoxUserMessages после добавления элементов
+                                             //перематываем список в конец
+            listBoxUserMessages.TopIndex = listBoxUserMessages.Items.Count - 1;
+        }
+
+
+        private void ReadAllUserMessages(long localUserID, long localContID)
 		{
 			lstUserMessages = new List<String>();
 
@@ -9697,7 +9802,8 @@ namespace Nilsa
 				}
 				else if (SocialNetwork == 3)
 				{
-					getMessageHistory(localUserID, localContID);
+					//getMessageHistory(localUserID, localContID);
+					GetMessageHistoryAsync(localUserID, localContID);
 
                     /*List<String> lstHistory = new List<String>();
 					listBoxUserMessages.Items.Clear();
@@ -9736,7 +9842,7 @@ namespace Nilsa
 						listBoxUserMessages.Items.Add((inboundMessage ? "<- " : "-> ") + dateStr + " " + timeStr + " - " + bodyStr);
 						lstUserMessages.Add(value);
 					}*/
-				}
+                }
 				if (listBoxUserMessages.Items.Count > 0)
 				{
 					listBoxUserMessages.TopIndex = listBoxUserMessages.Items.Count - 1;
@@ -14857,7 +14963,7 @@ namespace Nilsa
 					resp.TEXT = resp.TEXT.Replace("\n", " ");
 
 					addToHistory(localPersId, localContId, false, DateTime.Now.Date.ToString(), DateTime.Now.TimeOfDay.ToString(), resp.TEXT.Replace("\n", " "));
-					if (iPersUserID == localPersId && iContUserID == localContId) getMessageHistory(localPersId, localContId);
+					if (iPersUserID == localPersId && iContUserID == localContId) GetMessageHistoryAsync(localPersId, localContId); //getMessageHistory(localPersId, localContId);
 
 					if (resp.MESSAGES != null)
 					{
@@ -15694,7 +15800,7 @@ namespace Nilsa
 				if (resp.STATUS == 200 && resp.MESSAGE.Contains("MESSAGE SENT SUCCESSFULLY")) //проверка успешная ли отрпавка сообщения персонажа и перемещение в истори.
 				{
 					//addToHistory(localPersId, localContId, false, DateTime.Now.Date.ToString(), DateTime.Now.TimeOfDay.ToString(), resp.TEXT);
-					if (iPersUserID == localPersId) getMessageHistory(localPersId, localContId);
+					if (iPersUserID == localPersId) GetMessageHistoryAsync(localPersId, localContId); //getMessageHistory(localPersId, localContId);
 				}
 				else if (resp.STATUS == 200 && resp.DATA != null) // проверка есть ли новые сообщения у персонажа
 				{

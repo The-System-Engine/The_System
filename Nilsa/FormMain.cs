@@ -19501,14 +19501,12 @@ namespace Nilsa
 			int index = e.Index;
 			if (index >= 0 && index < listBoxUserMessages.Items.Count)
 			{
-				String value = listBoxUserMessages.Items[index].ToString();
-				String historyItemFlag = value.Substring(0, value.IndexOf(" "));
-				value = value.Substring(value.IndexOf(" ") + 1);
-				String historyItemDate = value.Substring(0, value.IndexOf(" "));
-				value = value.Substring(value.IndexOf(" ") + 1);
-				String historyItemTime = value.Substring(0, value.IndexOf(" "));
-				value = value.Substring(value.IndexOf(" ") + 3);
-				String historyItemText = NilsaUtils.StringToText(value);
+				var value = listBoxUserMessages.Items[index].ToString().Split(' ');
+				if (value.Length < 5) return;
+				var historyItemFlag = value[0];
+				var historyItemDate = value[1];
+				var historyItemTime = value[2];
+ 				var historyItemText = NilsaUtils.StringToText(value[4]);
 
 				TextFormatFlags flags = TextFormatFlags.NoClipping | TextFormatFlags.NoPadding | TextFormatFlags.Left | TextFormatFlags.TextBoxControl | TextFormatFlags.WordBreak;
 				Size proposedSize = new Size(listBoxUserMessages.Width - HISTORY_PHOTO_WIDTH, int.MaxValue);

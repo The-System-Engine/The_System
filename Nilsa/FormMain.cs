@@ -4504,7 +4504,7 @@ namespace Nilsa
 
 		private string mergeContacterMessageToTop(string message)
 		{
-			if (iInMsgID <= 0 || message.StartsWith("INIT_GROUP_DIALOG|") || message.StartsWith("INIT_PERSONE_GROUPS_DIALOG|") || message.StartsWith("INIT_DIALOG|") || message.StartsWith("ERROR_SEND_MESSAGE") || message.StartsWith("DIALOG_DONE") || message.Equals("INIT_PERSONE_DIALOG") || message.Equals("CLEAR_PERSONE_DIALOGS"))
+			if (iInMsgID < 0 || message.StartsWith("INIT_GROUP_DIALOG|") || message.StartsWith("INIT_PERSONE_GROUPS_DIALOG|") || message.StartsWith("INIT_DIALOG|") || message.StartsWith("ERROR_SEND_MESSAGE") || message.StartsWith("DIALOG_DONE") || message.Equals("INIT_PERSONE_DIALOG") || message.Equals("CLEAR_PERSONE_DIALOGS"))
 				return message;
 
 			string messageText = message;
@@ -4527,7 +4527,7 @@ namespace Nilsa
 
 					if (iCur_iContUserID == iContUserID)
 					{
-						if (iCur_iInMsgID <= 0 || message.StartsWith("INIT_GROUP_DIALOG|") || message.StartsWith("INIT_PERSONE_GROUPS_DIALOG|") || value.StartsWith("INIT_DIALOG|") || value.StartsWith("ERROR_SEND_MESSAGE") || value.StartsWith("DIALOG_DONE") || value.Equals("INIT_PERSONE_DIALOG") || value.Equals("CLEAR_PERSONE_DIALOGS"))
+						if (iCur_iInMsgID < 0 || message.StartsWith("INIT_GROUP_DIALOG|") || message.StartsWith("INIT_PERSONE_GROUPS_DIALOG|") || value.StartsWith("INIT_DIALOG|") || value.StartsWith("ERROR_SEND_MESSAGE") || value.StartsWith("DIALOG_DONE") || value.Equals("INIT_PERSONE_DIALOG") || value.Equals("CLEAR_PERSONE_DIALOGS"))
 							break;
 
 						if (SocialNetwork == 0)

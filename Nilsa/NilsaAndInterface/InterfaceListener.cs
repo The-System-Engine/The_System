@@ -91,7 +91,15 @@ namespace Nilsa.NilsaAndInterface
                     {
                         File.WriteAllText(requestPath, tinderRequest);
                         var logPath = Path.Combine(Application.StartupPath, "RequestLogs.txt");
-                        File.AppendAllText(logPath, tinderRequest + "\n");
+
+                        var listHistory = new List<string>(File.ReadAllLines(logPath));
+                        listHistory.Add(tinderRequest + "\n");
+                        if (listHistory.Count > 20)
+                        {
+                            int elementsToRemove = listHistory.Count - 20;
+                            listHistory.RemoveRange(0, elementsToRemove);
+                        }
+                        File.WriteAllLines(logPath, listHistory);
                     });
                 }
                 catch (Exception)
@@ -142,7 +150,15 @@ namespace Nilsa.NilsaAndInterface
                     string responsePath = Path.Combine(NilsaToInterfacePath.PathWebDriver, NilsaToInterfacePath.FileData);
                     incomeInterfaceMessage = await Task.Run(() => File.ReadAllText(responsePath));
                     var logPath = Path.Combine(Application.StartupPath, "ResponseLogs.txt");
-                    File.AppendAllText(logPath, incomeInterfaceMessage + "\n");
+                    var listHistory = new List<string>(File.ReadAllLines(logPath));
+                    listHistory.Add(incomeInterfaceMessage + "\n");
+                    if (listHistory.Count > 20)
+                    {
+                        int elementsToRemove = listHistory.Count - 20;
+                        listHistory.RemoveRange(0, elementsToRemove);
+                    }
+                    File.WriteAllLines(logPath, listHistory);
+                    //File.AppendAllText(logPath, incomeInterfaceMessage + "\n");
                 }
                 catch (Exception)
                 {

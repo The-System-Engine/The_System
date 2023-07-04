@@ -9,8 +9,8 @@ namespace Nilsa.TinderAssistent
     public class IncomeMessage
     {
         public IncomeMessage() { }
-        public string CONTACTER { get; set; }
-        public int UNREAD_COUNT { get; set; }
         public UnreadMessage[] MESSAGES { get; set; }
+        public string UNREAD_COUNT { get; set; }
+        public string CONTACTER { get; set; }
     }
 }

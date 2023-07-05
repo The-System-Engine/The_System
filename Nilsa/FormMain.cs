@@ -4536,7 +4536,9 @@ namespace Nilsa
 								api_Messages_MarkAsRead(iCur_iInMsgID);
 						}
 
-						messageText += "<br>" + value;
+                        var hasPunctuation = messageText.EndsWith(".") || messageText.EndsWith("!") || messageText.EndsWith("?");
+						if (hasPunctuation) messageText += " " + value;
+						else messageText += ". " + value;
 						lstReceivedMessages.RemoveAt(i);
 					}
 					else

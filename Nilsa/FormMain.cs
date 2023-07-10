@@ -141,7 +141,7 @@ namespace Nilsa
 		public int[] iCompareVectorsKoefOut;
 		public String[] sMsgHarFilter;
 		public static int iMsgHarCount = 16;
-		public  int iMsgHarCountNonStatic = 16;
+		public int iMsgHarCountNonStatic = 16;
 		public int iMsgHarAttrCount = 4;
 
 		MessagesLabel[] lblMsgHarNames;
@@ -403,7 +403,7 @@ namespace Nilsa
 		public string CopyFromResourcesToImages(string resourceFileName)
 		{
 			string resourcePath = "Nilsa.Resources." + resourceFileName;
-			string outputPath = Path.Combine(Application.StartupPath , "Images");
+			string outputPath = Path.Combine(Application.StartupPath, "Images");
 			string outputFile = Path.Combine(outputPath, resourceFileName);
 
 			if (File.Exists(outputFile)) return outputFile;
@@ -1131,7 +1131,7 @@ namespace Nilsa
 		}
 
 		private void ButtonEditPersHarValues_Paint(object sender, PaintEventArgs e)
-		
+
 		{
 			float w = buttonEditPersHarValues.ClientSize.Width;
 			float h = buttonEditPersHarValues.ClientSize.Height;
@@ -2237,7 +2237,7 @@ namespace Nilsa
 			}
 		}
 
-		public async void Setup(String sUsrSelLogin = "", String sUsrSelPwd = "", String sUsrSelID="")
+		public async void Setup(String sUsrSelLogin = "", String sUsrSelPwd = "", String sUsrSelID = "")
 		{
 
 
@@ -3287,7 +3287,7 @@ namespace Nilsa
 					}
 					catch (Exception) { }
 					if (listCurrentCharacteristics.Count <= 0) continue;
-					if ( listCurrentCharacteristics[parametrId - 1].Equals($"{parametrId}|{parametrValue}") )
+					if (listCurrentCharacteristics[parametrId - 1].Equals($"{parametrId}|{parametrValue}"))
 					{
 						contId = Convert.ToInt64(stringContId);
 						break;
@@ -4536,7 +4536,7 @@ namespace Nilsa
 								api_Messages_MarkAsRead(iCur_iInMsgID);
 						}
 
-                        var hasPunctuation = messageText.EndsWith(".") || messageText.EndsWith("!") || messageText.EndsWith("?");
+						var hasPunctuation = messageText.EndsWith(".") || messageText.EndsWith("!") || messageText.EndsWith("?");
 						if (hasPunctuation) messageText += " " + value;
 						else messageText += ". " + value;
 						lstReceivedMessages.RemoveAt(i);
@@ -4576,6 +4576,7 @@ namespace Nilsa
 				lstAlgorithmsRecordsList.Add(dbr);
 			}
 		}
+
 
 		private bool ResendFromOperators(string msg)
 		{
@@ -9248,6 +9249,13 @@ namespace Nilsa
             _text = _text.Replace("\n", " ");
             _text = _text.Replace("\r", " ");
 
+			//cut _date after 10 elements
+			if (_date.Length > 9) _date = _date.Substring(0, 10);
+            if (_time.Length > 7) _time = _time.Substring(0, 8);
+            /*testing
+            var entry2 = (inboundMessage ? "<-" : "->") + " " + _date + " " + _time + " - " + _text;
+            listBoxUserMessages.Items.Add(entry2); //<- 04.07.2023 20:13:21 - привет*/
+
             string filePath = Path.Combine(sDataPath, "chat_" + getSocialNetworkPrefix() + _iPersUserID.ToString() + "_" + Convert.ToString(_iContUserID) + ".txt");
             string entry = (inboundMessage ? "0" : "1") + "|" + _date + "|" + _time + "|" + _text + Environment.NewLine;
 
@@ -9282,7 +9290,8 @@ namespace Nilsa
             {
                 // Обработка случая, когда не удалось записать данные в файл после нескольких попыток
                 // Можно вывести сообщение об ошибке или выполнить другие действия
-                listBoxUserMessages.Items.Add(entry);
+                entry = (inboundMessage ? "<-" : "->") + " " + _date + " " + _time + " - " + _text;
+                listBoxUserMessages.Items.Add(entry); //<- 04.07.2023 20:13:21 - привет
             }
         
 		}
@@ -9332,7 +9341,8 @@ namespace Nilsa
                 {
                     // Обработка случая, когда не удалось записать данные в файл после нескольких попыток
                     // Можно вывести сообщение об ошибке или выполнить другие действия
-                    listBoxUserMessages.Items.Add(entry);
+                    entry = (inboundMessage ? "<-" : "->") + " " + _date + " " + _time + " - " + _text;
+                    listBoxUserMessages.Items.Add(entry); //<- 04.07.2023 20:13:21 - привет
                 }
             });
         }
@@ -18586,7 +18596,7 @@ namespace Nilsa
 			}
 		}
 
-		void contextMenuStripEQInMsgValuesItem_Click(object sender, EventArgs e)
+        void contextMenuStripEQInMsgValuesItem_Click(object sender, EventArgs e)
 		{
 			if (labelInEqMsgHarTitleValue_Text.Length > 0)
 			{
@@ -19054,42 +19064,42 @@ namespace Nilsa
 				SetEQInMessageList(labelInMsgHarTitleValue_Text);
 		}
 
-        static void RunInterface()
-        {
-            // Путь к .bat файлу
-            string batFilePath = Path.Combine(Application.StartupPath, "RunInterface.bat");
+		static void RunInterface()
+		{
+			// Путь к .bat файлу
+			string batFilePath = Path.Combine(Application.StartupPath, "RunInterface.bat");
 
-            if (File.Exists(batFilePath))
-            {
-                // Создание процесса для выполнения .bat файла
-                Process process = new Process();
-                process.StartInfo.FileName = "cmd.exe";
-                process.StartInfo.Arguments = "/c \"" + batFilePath + "\"";
-                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                process.StartInfo.CreateNoWindow = true;
+			if (File.Exists(batFilePath))
+			{
+				// Создание процесса для выполнения .bat файла
+				Process process = new Process();
+				process.StartInfo.FileName = "cmd.exe";
+				process.StartInfo.Arguments = "/c \"" + batFilePath + "\"";
+				process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+				process.StartInfo.CreateNoWindow = true;
 
-                process.EnableRaisingEvents = true;
-                process.Exited += (sender, e) =>
-                {
-                    int exitCode = process.ExitCode;
+				process.EnableRaisingEvents = true;
+				process.Exited += (sender, e) =>
+				{
+					int exitCode = process.ExitCode;
 					if (exitCode != 0)
 					{
 						MessageBox.Show("Starting Interface Error" + exitCode.ToString());
 					}
-                    // Обработка ошибки или успешного завершения
-                };
+					// Обработка ошибки или успешного завершения
+				};
 
-                process.Start();
-                process.WaitForExit();
-            }
-            else
-            {
-                Console.WriteLine("Файл .bat не найден.");
-            }
-        }
+				process.Start();
+				process.WaitForExit();
+			}
+			else
+			{
+				Console.WriteLine("Файл .bat не найден.");
+			}
+		}
 
 
-        private void FormMain_Load(object sender, EventArgs e)
+		private void FormMain_Load(object sender, EventArgs e)
 		{
 			backgroundWorkerUpdate.RunWorkerAsync(false);
 
@@ -19415,7 +19425,8 @@ namespace Nilsa
 			int index = e.Index;
 			if (index >= 0 && index < listBoxUserMessages.Items.Count)
 			{
-				String value = listBoxUserMessages.Items[index].ToString();
+				var value = listBoxUserMessages.Items[index].ToString();
+
 				String historyItemFlag = value.Substring(0, value.IndexOf(" "));
 				bool bPerson = historyItemFlag[0] == '-';
 				value = value.Substring(value.IndexOf(" ") + 1);
@@ -19425,7 +19436,7 @@ namespace Nilsa
 				value = value.Substring(value.IndexOf(" ") + 3);
 				String historyItemText = NilsaUtils.StringToText(value);
 
-				Graphics g = e.Graphics;
+                Graphics g = e.Graphics;
 
 				//background:
 				SolidBrush backgroundBrush;

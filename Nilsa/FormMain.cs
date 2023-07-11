@@ -291,7 +291,69 @@ namespace Nilsa
 		public string sDBDataItemsStrings_AgeUnknown;
         private System.Windows.Forms.Timer _timerExportContacters;
 
+        private List<TimeSpan> exportTimes = new List<TimeSpan>();
+
         private void timerExportContacters_Tick(object sender, EventArgs e)
+        {
+            var currentTime = DateTime.Now.TimeOfDay;
+
+            foreach (TimeSpan exportTime in exportTimes)
+            {
+                if (currentTime >= exportTime && currentTime < exportTime.Add(TimeSpan.FromSeconds(1)))
+                {
+                    // Время экспорта совпало, выполняем экспорт
+                    ExportContactersToCSV();
+                    break;
+                }
+            }
+        }
+
+		private void GetExportConfig()
+		{
+            var path = Path.Combine(Application.StartupPath, "Report");
+            string configFilePath = Path.Combine(path, "config_export.txt");
+            if (File.Exists(configFilePath))
+            {
+                string[] exportTimeLines = File.ReadAllLines(configFilePath);
+                foreach (string line in exportTimeLines)
+                {
+                    TimeSpan exportTime;
+                    if (TimeSpan.TryParse(line, out exportTime))
+                    {
+                        exportTimes.Add(exportTime);
+                    }
+                }
+            }
+        }
+
+        private void ExportContactersToCSV()
+        {
+            var path = Path.Combine(Application.StartupPath, "Report");
+            var fileName = $"contacts_export_id{iPersUserID}_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.csv";
+
+            FormEditContactsDB formEditContactsDB = new FormEditContactsDB(this);
+            formEditContactsDB.sContHar = new String[iContHarCount, iContHarAttrCount + 1];
+            for (int i = 0; i < iContHarCount; i++)
+            {
+                for (int j = 0; j < iContHarAttrCount; j++)
+                    formEditContactsDB.sContHar[i, j] = sContHar[i, j];
+                formEditContactsDB.sContHar[i, iContHarAttrCount] = "";
+            }
+            formEditContactsDB.iContHarCount = iContHarCount;
+            formEditContactsDB.iContHarAttrCount = iContHarAttrCount;
+            formEditContactsDB.Setup(iPersUserID.ToString() + " (" + userLogin + ", " + userPassword + ")", iPersUserID, (iContUserID >= 0 ? iContUserID : 0), INIT_PERSONE_DIALOG);
+
+            formEditContactsDB.FilterList(formEditContactsDB.ClearFilter());
+            formEditContactsDB.SetAllIndexesChecked();
+
+            formEditContactsDB.ExportToCSV(path, fileName);
+
+            formEditContactsDB.DialogResult = DialogResult.OK;
+            formEditContactsDB.Dispose();
+        }
+
+
+        /*private void timerExportContacters_Tick(object sender, EventArgs e)
         {
 			// Выполнение действий по выгрузке данных
 			// ...
@@ -326,9 +388,6 @@ namespace Nilsa
             formEditContactsDB.iContHarAttrCount = iContHarAttrCount;
             formEditContactsDB.Setup(iPersUserID.ToString() + " (" + userLogin + ", " + userPassword + ")", iPersUserID, (iContUserID >= 0 ? iContUserID : 0), INIT_PERSONE_DIALOG);
 
-            //formEditContactsDB.ShowDialog();
-            //Application.DoEvents();
-
             formEditContactsDB.FilterList(formEditContactsDB.ClearFilter());
 			formEditContactsDB.SetAllIndexesChecked();
 
@@ -339,9 +398,7 @@ namespace Nilsa
 
             formEditContactsDB.DialogResult = DialogResult.OK;
             formEditContactsDB.Dispose();
-			formEditContactsDB.Close();
-            //Application.DoEvents();
-        }
+        }*/
         private void LoadColorSettings()
 		{
 			PersonColor1 = "BF9EFF";
@@ -1070,9 +1127,12 @@ namespace Nilsa
             //this.Visible = true;
             //this.Scale(0.5f);
 
+            // Загрузка времени экспорта из файла
+            GetExportConfig();
             // Создание и настройка таймера
             _timerExportContacters = new System.Windows.Forms.Timer();
-            _timerExportContacters.Interval = CalculateMillisecondsToMidnight();
+			//_timerExportContacters.Interval = CalculateMillisecondsToMidnight();
+			_timerExportContacters.Interval = 1000;
             _timerExportContacters.Tick += timerExportContacters_Tick;
 
             // Запуск таймера

@@ -503,6 +503,11 @@ namespace Nilsa
 
         private void button4_Click(object sender, EventArgs e)
         {
+            FilterAction();
+        }
+
+        public void FilterAction()
+        {
             if (button4.Text.Equals(NilsaUtils.Dictonary_GetText(mFormMain.userInterface, "messageboxText_2", this.Name, "Отключить фильтр")))
             {
                 FilterList(ClearFilter());
@@ -514,8 +519,7 @@ namespace Nilsa
                 NilsaUtils.SaveLongValue(8, 1);
             }
         }
-
-        private String[] ClearFilter()
+        public String[] ClearFilter()
         {
             String[] RQV = new String[iContHarCount];
             for (int iii = 0; iii < iContHarCount; iii++)
@@ -527,7 +531,7 @@ namespace Nilsa
             return RQV;
         }
 
-        private void FilterList(String[] RQV, int counterMax = 0)
+        public void FilterList(String[] RQV, int counterMax = 0)
         {
             button2.Enabled = tbAllPersonenInRotation.Checked;
             button5.Enabled = tbAllPersonenInRotation.Checked;
@@ -2821,6 +2825,11 @@ namespace Nilsa
 
         private void button10_Click(object sender, EventArgs e)
         {
+            SetAllIndexesChecked();
+        }
+
+        public void SetAllIndexesChecked()
+        {
             Cursor = Cursors.WaitCursor;
             mNotLockItemChecked = false;
             for (int k = 1; k < grid1.RowsCount; k++)
@@ -2831,7 +2840,6 @@ namespace Nilsa
             grid_ItemChecked();
             Cursor = Cursors.Arrow;
         }
-
         private void button12_Click_1(object sender, EventArgs e)
         {
             Cursor = Cursors.WaitCursor;
@@ -3566,6 +3574,61 @@ namespace Nilsa
 
         private void button18_Click(object sender, EventArgs e)
         {
+            ExportToCSV();
+        }
+
+        public void ExportToCSV(string defaultPath = "", string defaultFileName = "")
+        {
+            string filePath;
+            if (!string.IsNullOrEmpty(defaultPath) && !string.IsNullOrEmpty(defaultFileName))
+            {
+                filePath = Path.Combine(defaultPath, defaultFileName);
+            }
+            else
+            {
+                saveFileDialog.Filter = "CSV-files (*.csv)|*.csv|All files (*.*)|*.*";
+                saveFileDialog.FilterIndex = 0;
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    filePath = saveFileDialog.FileName;
+                }
+                else
+                {
+                    // Отмена экспорта, если пользователь не выбрал файл
+                    return;
+                }
+            }
+
+            List<string> lstUsersToExport = new List<string>();
+
+            string sColumnNames = "";
+            for (int j = 0; j < columnOrder.Length; j++)
+            {
+                sColumnNames += grid1[0, columnOrder[j]].Value + ";";
+            }
+            lstUsersToExport.Add(sColumnNames);
+
+            foreach (int k in gridCheckedIndexes)
+            {
+                string sColumnValues = "";
+                for (int j = 0; j < columnOrder.Length; j++)
+                {
+                    sColumnValues += (grid1[k, columnOrder[j]].Value != null ? grid1[k, columnOrder[j]].Value.ToString() : "") + ";";
+                }
+
+                lstUsersToExport.Add(sColumnValues);
+            }
+            if (!string.IsNullOrEmpty(defaultPath) && !Directory.Exists(defaultPath))
+            {
+                Directory.CreateDirectory(defaultPath);
+            }
+            File.WriteAllLines(filePath, lstUsersToExport, Encoding.UTF8);
+        }
+
+
+        /*public void ExportToCSV()
+        {
             saveFileDialog.Filter = "CSV-files (*.csv)|*.csv|All files (*.*)|*.*";
             saveFileDialog.FilterIndex = 0;
 
@@ -3591,8 +3654,7 @@ namespace Nilsa
 
                 File.WriteAllLines(saveFileDialog.FileName, lstUsersToExport, Encoding.UTF8);
             }
-
-        }
+        }*/
 
         private void button19_Click(object sender, EventArgs e)
         {

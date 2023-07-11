@@ -35,6 +35,7 @@ using Nilsa.TinderAssistent;
 using Nilsa.ConfigFiles;
 using Nilsa.NilsaAndInterface;
 using Nilsa.SelfLearning;
+using System.Timers;
 //using SourceGrid;
 
 namespace Nilsa
@@ -288,8 +289,60 @@ namespace Nilsa
 		Image global_Nilsa_Properties_Resources_empty_image = global::Nilsa.Properties.Resources.empty_16_16;
 
 		public string sDBDataItemsStrings_AgeUnknown;
+        private System.Windows.Forms.Timer _timerExportContacters;
 
-		private void LoadColorSettings()
+        private void timerExportContacters_Tick(object sender, EventArgs e)
+        {
+			// Выполнение действий по выгрузке данных
+			// ...
+			StopService();
+			ExportContactersToCSV();
+            // Пересчет интервала для следующего запуска в 00:00
+            _timerExportContacters.Interval = CalculateMillisecondsToMidnight();
+			StartService();
+        }
+
+        private int CalculateMillisecondsToMidnight()
+        {
+            DateTime now = DateTime.Now;
+            DateTime midnight = now.Date.AddDays(1); // Следующая полночь
+            TimeSpan timeUntilMidnight = midnight - now;
+            return (int)timeUntilMidnight.TotalMilliseconds;
+        }
+
+		private void ExportContactersToCSV()
+		{
+            //tbEditContactsDB_Click(null, null);
+
+            FormEditContactsDB formEditContactsDB = new FormEditContactsDB(this);
+            formEditContactsDB.sContHar = new String[iContHarCount, iContHarAttrCount + 1];
+            for (int i = 0; i < iContHarCount; i++)
+            {
+                for (int j = 0; j < iContHarAttrCount; j++)
+                    formEditContactsDB.sContHar[i, j] = sContHar[i, j];
+                formEditContactsDB.sContHar[i, iContHarAttrCount] = "";
+            }
+            formEditContactsDB.iContHarCount = iContHarCount;
+            formEditContactsDB.iContHarAttrCount = iContHarAttrCount;
+            formEditContactsDB.Setup(iPersUserID.ToString() + " (" + userLogin + ", " + userPassword + ")", iPersUserID, (iContUserID >= 0 ? iContUserID : 0), INIT_PERSONE_DIALOG);
+
+            //formEditContactsDB.ShowDialog();
+            //Application.DoEvents();
+
+            formEditContactsDB.FilterList(formEditContactsDB.ClearFilter());
+			formEditContactsDB.SetAllIndexesChecked();
+
+
+            var path = Path.Combine(Application.StartupPath, "Contacts_Export"); //contacts.csv
+			var fileName = $"contacts_export_{DateTime.Today.ToString().Split(' ')[0]}.csv";
+            formEditContactsDB.ExportToCSV(path, fileName);
+
+            formEditContactsDB.DialogResult = DialogResult.OK;
+            formEditContactsDB.Dispose();
+			formEditContactsDB.Close();
+            //Application.DoEvents();
+        }
+        private void LoadColorSettings()
 		{
 			PersonColor1 = "BF9EFF";
 			PersonColor2 = "D0B8FF";
@@ -1007,16 +1060,24 @@ namespace Nilsa
 			webBrowserInMessageText.DocumentText = " ";
 			webBrowserOutEqMessageText.DocumentText = " ";
 
-			//api = new VkApi();
-			//SocialNetwork = 0;
-			//toolStripButtonSocialNetworkChange_Click(null, null);
-			//Setup();
-			//this.Location = new Point(0, 0);
-			//this.Size = Screen.PrimaryScreen.WorkingArea.Size;
-			//this.WindowState = FormWindowState.Maximized;
-			//this.Visible = true;
-			//this.Scale(0.5f);
-		}
+            //api = new VkApi();
+            //SocialNetwork = 0;
+            //toolStripButtonSocialNetworkChange_Click(null, null);
+            //Setup();
+            //this.Location = new Point(0, 0);
+            //this.Size = Screen.PrimaryScreen.WorkingArea.Size;
+            //this.WindowState = FormWindowState.Maximized;
+            //this.Visible = true;
+            //this.Scale(0.5f);
+
+            // Создание и настройка таймера
+            _timerExportContacters = new System.Windows.Forms.Timer();
+            _timerExportContacters.Interval = CalculateMillisecondsToMidnight();
+            _timerExportContacters.Tick += timerExportContacters_Tick;
+
+            // Запуск таймера
+            _timerExportContacters.Start();
+        }
 
 		Image[] tableLayoutLeftBottomImages;
 		Label[] tableLayoutLeftBottomLabels;
@@ -16758,8 +16819,31 @@ namespace Nilsa
 			//Application.DoEvents();
 		}
 
+        private void timerAnswerWaitingOn()
+        {
+            if (!bServiceStart)
+                return;
+            timerDefaultAnswerWaitingCycle = timersValues[5];
+            timerAnswerWaitingCycle = timerDefaultAnswerWaitingCycle;
+            progressBarAnswerWaiting.Value = 0;
+            progressBarAnswerWaiting.Invalidate();
+            //Application.DoEvents();
 
-		private bool savedTimersReadMessages;
+            timerAnswerWaiting.Enabled = true;
+
+            /*if (bSessionAnswerSended && !timerWriteMessages.Enabled)
+			{
+				timerDefaultAnswerWaitingCycle = timersValues[5];
+				timerAnswerWaitingCycle = timerDefaultAnswerWaitingCycle;
+				progressBarAnswerWaiting.Value = 0;
+				progressBarAnswerWaiting.Invalidate();
+				Application.DoEvents();
+
+				timerAnswerWaiting.Enabled = true;
+			}*/
+        }
+
+        private bool savedTimersReadMessages;
 		private bool savedTimersWriteMessages;
 		private bool savedTimersAnswerWaiting;
 		private bool savedTimersCountersStart;
@@ -16800,30 +16884,6 @@ namespace Nilsa
 			timerOutgoingPull.Enabled = savedTimersOutgoingPull;
 			timerFlashStartButton.Enabled = savedTimersFlashStartButton;
 			timerChangePersone.Enabled = savedTimersChangePersone;
-		}
-
-		private void timerAnswerWaitingOn()
-		{
-			if (!bServiceStart)
-				return;
-			timerDefaultAnswerWaitingCycle = timersValues[5];
-			timerAnswerWaitingCycle = timerDefaultAnswerWaitingCycle;
-			progressBarAnswerWaiting.Value = 0;
-			progressBarAnswerWaiting.Invalidate();
-			//Application.DoEvents();
-
-			timerAnswerWaiting.Enabled = true;
-
-			/*if (bSessionAnswerSended && !timerWriteMessages.Enabled)
-			{
-				timerDefaultAnswerWaitingCycle = timersValues[5];
-				timerAnswerWaitingCycle = timerDefaultAnswerWaitingCycle;
-				progressBarAnswerWaiting.Value = 0;
-				progressBarAnswerWaiting.Invalidate();
-				Application.DoEvents();
-
-				timerAnswerWaiting.Enabled = true;
-			}*/
 		}
 
 		private void setReinitDialogsWhenFreeFlag()
@@ -18034,7 +18094,7 @@ namespace Nilsa
 		}
 
 		private bool INIT_PERSONE_DIALOG = false;
-		private void tbEditContactsDB_Click(object sender, EventArgs e)
+		private void /**/tbEditContactsDB_Click(object sender, EventArgs e)
 		{
 			// manual set timers
 			StopAnswerTimer();
@@ -23312,17 +23372,30 @@ namespace Nilsa
                 }
 				if (needAdd)
 				{
-					lstReceivedMessages.Add($"0|{theSystemContacter.ContID}|" + DateTime.Now.ToShortDateString() + "|" + DateTime.Now.ToShortTimeString() + "|" + "TIMER_01_FINISHED_READ_NEW_MESSAGE");
+                    if (!timerAnswerWaiting.Enabled)
+                    {
+                        Invoke((MethodInvoker)delegate
+                        {
+                            timerAnswerWaitingOn();
+                        });
+                    }
+                    lstReceivedMessages.Add($"0|{theSystemContacter.ContID}|" + DateTime.Now.ToShortDateString() + "|" + DateTime.Now.ToShortTimeString() + "|" + "TIMER_01_FINISHED_READ_NEW_MESSAGE");
 					addToHistory(iPersUserID, theSystemContacter.ContID, true, DateTime.Now.Date.ToString(), DateTime.Now.TimeOfDay.ToString(), "TIMER_01_FINISHED_READ_NEW_MESSAGE");
 					Invoke((MethodInvoker)delegate
 					{
 						SelectNextReceivedMessage(false);
 					});
-					if (!timerAnswerWaiting.Enabled) timerAnswerWaiting.Enabled = true;
-				}
-				else timerAnswerWaiting.Enabled = false;
-				//SelectNextReceivedMessage(false);
-			}
+                }
+                else
+                {
+                    Invoke((MethodInvoker)delegate
+                    {
+                        timerAnswerWaitingOff();
+                    });
+                }
+
+                //SelectNextReceivedMessage(false);
+            }
 		}
 
 		private void backgroundWorkerReadNewMessagesTimer_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -23441,7 +23514,12 @@ namespace Nilsa
 			});*/
 		}
 
-		private void tbMessagesDBEqOutDeleteMessage_Click(object sender, EventArgs e)
+        private void toolStripButton4_Click_1(object sender, EventArgs e)
+        {
+			ExportContactersToCSV();
+        }
+
+        private void tbMessagesDBEqOutDeleteMessage_Click(object sender, EventArgs e)
 		{
 			if (listBoxOutMsg.SelectedIndex < 0)
 				return;

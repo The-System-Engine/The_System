@@ -18302,9 +18302,9 @@ namespace Nilsa
 		private void onAfterPersonenListChanged()
 		{
 			setRandomizeRotatePersonenButtonIcon();
-			toolStripMenuItemClearInMsgPullPersonen.Enabled = lstPersoneChange.Count > 0 && SocialNetwork == 0;
-			toolStripButtonPersoneForward.Enabled = lstPersoneChange.Count > 0 && SocialNetwork == 0;
-			toolStripButtonPersoneRewind.Enabled = lstPersoneChange.Count > 0 && SocialNetwork == 0;
+			toolStripMenuItemClearInMsgPullPersonen.Enabled = lstPersoneChange.Count > 0;
+			toolStripButtonPersoneForward.Enabled = lstPersoneChange.Count > 0;
+			toolStripButtonPersoneRewind.Enabled = lstPersoneChange.Count > 0;
 			toolStripButtonPersonePause.Enabled = false;// lstPersoneChange.Count > 0 && SocialNetwork == 0;
 			toolStripButtonPersonePlay.Enabled = false;// lstPersoneChange.Count > 0 && SocialNetwork == 0;
 
